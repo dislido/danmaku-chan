@@ -19,5 +19,5 @@ function danmakuRender(it: TwitchDanmakuItem) {
 
 export default function render(msg: TwitchDanmaku) {
   if (msg.type === 'danmaku-item') return danmakuRender(msg as TwitchDanmakuItem);
-  return;
+  return null;
 }

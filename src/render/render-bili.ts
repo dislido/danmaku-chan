@@ -1,4 +1,5 @@
 import { elFactory } from "../util";
+
 function GuardBuyRender(it: BiliGuardBuy) {
   const levelMap = {
     3: '舰长',
@@ -87,5 +88,5 @@ export default function render(msg: BiliDanmaku) {
   if (msg.type === 'danmaku-item') return danmakuRender(msg as BiliDanmakuItem);
   if (msg.type === 'gift-item') return giftRender(msg as BiliGiftItem);
   if (msg.type === 'guard-buy') return GuardBuyRender(msg as BiliGuardBuy);
-  return;
+  return null;
 }

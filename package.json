@@ -4,7 +4,8 @@
   "description": "写着玩的弹幕姬",
   "main": "index.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "tsc&&xcopy /E /Y assets dist"
   },
   "author": "",
   "license": "ISC",

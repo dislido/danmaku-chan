@@ -1,5 +1,5 @@
 import { ipcRenderer, remote } from 'electron';
-import ConfigManager from './config-manager';
+import ConfigManager from './setting/config-manager';
 import Server from './server';
 import biliRender from "./render/render-bili";
 import twitchRender from "./render/render-twitch";
@@ -23,14 +23,17 @@ function limitDanmaku() {
     listEl.children[i].remove();
   }
 }
-function appendDanmaku(el?: Element) {
-  if (el) listEl.append(el);
+function appendDanmaku(el: Element | null, site: string) {
+  if (el) {
+    el.setAttribute('data-site', site)
+    listEl.append(el);
+  };
 }
 
 function render(data: Danmaku[]) {
   data.forEach(it => {
-    if (it.site === 'bilibili') appendDanmaku(biliRender(it as BiliDanmaku));
-    if (it.site === 'twitch') appendDanmaku(twitchRender(it as TwitchDanmaku));
+    if (it.site === 'bilibili') appendDanmaku(biliRender(it as BiliDanmaku), it.site);
+    if (it.site === 'twitch') appendDanmaku(twitchRender(it as TwitchDanmaku), it.site);
   });
   limitDanmaku();
   listEl.scrollTop = listEl.scrollHeight;
