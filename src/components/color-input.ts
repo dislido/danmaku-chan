@@ -27,10 +27,18 @@ customElements.define('color-input', class extends HTMLElement {
     const colorInput = document.createElement('input');
     const alphaInput = document.createElement('input');
     const inputContainer = document.createElement('div');
+    const opacityInputContainer = document.createElement('div');
+    const opacityText = document.createElement('section');
+
+    opacityText.textContent = `opacity: ${alpha}/255`;
+    opacityInputContainer.style.display = 'inline-block';
+    opacityInputContainer.appendChild(opacityText);
+    opacityInputContainer.appendChild(alphaInput);
 
     const update = () => {
       const hexAlpha = parseInt(alphaInput.value).toString(16).padStart(2, '0');
       colorInput.style.opacity = `${parseInt(alpha) / 255}`;
+      opacityText.textContent = `opacity: ${alpha}/255`;
       this.dispatchEvent(new CustomEvent('change', {
         detail: {
           value: `${color}${hexAlpha}`,
@@ -58,7 +66,7 @@ customElements.define('color-input', class extends HTMLElement {
 
     inputContainer.appendChild(colorInput);
     container.appendChild(inputContainer);
-    container.appendChild(alphaInput);
+    container.appendChild(opacityInputContainer);
     update();
   }
 });
