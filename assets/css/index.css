@@ -1,0 +1,106 @@
+/* frame */
+html {
+  height: 100%;
+}
+html.setting {
+  outline: black 2px solid;
+  outline-offset: -2px;
+}
+body {
+  margin: 4px;
+  height: calc(100% - 8px);
+}
+#setting-icon {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: #aaaa;
+  color: black;
+  text-align: center;
+  line-height: 30px;
+  font-size: 24px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+header {
+  visibility: hidden;
+  margin-bottom: 4px;
+  height: 30px;
+}
+html.setting header {
+  visibility: visible;
+}
+#drag-mask {
+  position: fixed;
+  top: 34px;
+  left: 4px;
+  width: calc(100% - 8px);
+  height: calc(100% - 40px);
+  -webkit-app-region: drag;
+}
+
+#list {
+  height: calc(100% - 34px);
+  min-height: 1.5em;
+  background: var(--list-background, transparent);
+  color: var(--color, white);
+  overflow: hidden;
+  text-shadow: var(--color, white) 0 0 0.25em;
+  font-size: var(--font-size, 16px);
+  font-weight: var(--font-weight, bold);
+  -webkit-text-stroke: var(--text-stroke-color, black) var(--text-stroke-width, 0.05em);
+}
+#list > div {
+  margin: 0.25em 0;
+}
+
+/* danmaku-basic */
+
+.name {
+  margin-right: 8px;
+}
+.name::after {
+  content: ':';
+}
+.name[data-admin]::before {
+  content: '🔧';
+}
+.name[data-guard="3"] {
+  color: aqua;
+  -webkit-text-stroke-color: darkblue;
+}
+.name[data-guard="2"] {
+  color: darkmagenta;
+}
+.name[data-guard="1"] {
+  color: darkred;
+}
+.fans-medal {
+  margin-right: 4px;
+  background: #7777ffaa;
+  color: blue;
+  border-radius: 5px;
+  text-shadow: unset;
+  -webkit-text-stroke-color: transparent;
+}
+.fans-medal::after {
+  content: attr(data-level);
+  margin: 0 4px;
+  color: darkorchid;
+}
+
+.gift-item {
+  background: #88ff88aa;
+  padding: 10px;
+  border-radius: 5px;
+}
+.guard-name::before {
+  content: ' 上舰 ';
+}
+.gift-name::before {
+  content: ' 赠送了 ';
+}
+.gift-count::before {
+  content: ' × ';
+}
+
