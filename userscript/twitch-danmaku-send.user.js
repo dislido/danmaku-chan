@@ -68,3 +68,6 @@
     }
   }, 500);
 })();
+/*直播者
+<div class="chat-line__message" data-a-target="chat-line-message"><span class="chat-line__timestamp" data-a-target="chat-timestamp" data-test-selector="chat-timestamp">10:46</span><span><img alt="直播者" aria-label="直播者徽章" class="chat-badge" src="https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/1" srcset="https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/1 1x, https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/2 2x, https://static-cdn.jtvnw.net/badges/v1/5527c58c-fb7d-422d-b71b-f309dcb85cc1/3 4x"></span><span class="chat-line__username" role="button" tabindex="0"><span><span class="chat-author__display-name" data-a-target="chat-message-username" data-a-user="wuyikoei" data-test-selector="message-username" style="color: rgb(51, 115, 117);">wuyikoei</span></span></span><span aria-hidden="true">: </span><span class="text-fragment" data-a-target="chat-message-text">草，boss是黑百合么，我怀疑我要被爆甲开盾撞死</span></div>
+*/
