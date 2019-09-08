@@ -54,25 +54,39 @@ html.setting header {
   margin: 0.25em 0;
 }
 
-/* danmaku-basic */
-
-.name {
+/* basic */
+.danmaku-msg .name {
   margin-right: 8px;
 }
-.name::after {
+.danmaku-msg .name::after {
   content: ':';
 }
-.name[data-admin]::before {
+.danmaku-msg .name[data-admin]::before {
   content: '🔧';
 }
-.name[data-guard="3"] {
+
+.gift-item {
+  background: #88ff88aa;
+  padding: 10px;
+  border-radius: 5px;
+}
+.gift-name::before {
+  content: ' 赠送了 ';
+}
+.gift-count::before {
+  content: ' × ';
+}
+
+/* ----------- */
+
+.danmaku-msg .name[data-guard="3"] {
   color: aqua;
   -webkit-text-stroke-color: darkblue;
 }
-.name[data-guard="2"] {
+.danmaku-msg .name[data-guard="2"] {
   color: darkmagenta;
 }
-.name[data-guard="1"] {
+.danmaku-msg .name[data-guard="1"] {
   color: darkred;
 }
 .fans-medal {
@@ -88,19 +102,6 @@ html.setting header {
   margin: 0 4px;
   color: darkorchid;
 }
-
-.gift-item {
-  background: #88ff88aa;
-  padding: 10px;
-  border-radius: 5px;
-}
 .guard-name::before {
   content: ' 上舰 ';
 }
-.gift-name::before {
-  content: ' 赠送了 ';
-}
-.gift-count::before {
-  content: ' × ';
-}
-

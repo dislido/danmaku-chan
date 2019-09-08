@@ -1,72 +1,82 @@
 customElements.define('size-input', class extends HTMLElement {
+  static get observedAttributes() {
+    return ['value'];
+  }
+  
+  colorInput: HTMLInputElement;
+  alphaInput: HTMLInputElement;
+  opacityText: HTMLElement;
+  mounted = false;
+
   constructor() {
     super();
     const shadowRoot = this.attachShadow({ mode: 'open' });
     const container = document.createElement('div');
     const style = document.createElement('style');
-    style.textContent = `
-.color-input-container {
-  width: 50px;
-  height: 50px;
-  display: inline-block;
-  background: conic-gradient(white 90deg, gray 90deg 180deg, white 180deg 270deg, gray 270deg);
-}
-.color-input {
-  width: 50px;
-  height: 50px;
-  padding: 0;
-  position: absolute;
-  border: none;
-  background-color: transparent;
-}`;
+    style.textContent = ``;
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(container);
 
     let size = this.getAttribute('data-size') || '16';
     let unit = this.getAttribute('data-unit') || 'px';
-    const colorInput = document.createElement('input');
-    const alphaInput = document.createElement('input');
-    const inputContainer = document.createElement('div');
-    const opacityInputContainer = document.createElement('div');
-    const opacityText = document.createElement('section');
+    const sizeInput = document.createElement('input');
+    const unitInput = document.createElement('select');
 
-    opacityText.textContent = `opacity: ${alpha}/255`;
-    opacityInputContainer.style.display = 'inline-block';
-    opacityInputContainer.appendChild(opacityText);
-    opacityInputContainer.appendChild(alphaInput);
-
+    const unitPx = document.createElement('option');
+    unitPx.textContent = 'px';
+    unitPx.setAttribute('value', 'px');
+    unitInput.appendChild(unitPx);
+    const unitEm = document.createElement('option');
+    unitEm.textContent = 'em';
+    unitEm.setAttribute('value', 'em');
+    unitInput.appendChild(unitEm);
+  
     const update = () => {
-      const hexAlpha = parseInt(alphaInput.value).toString(16).padStart(2, '0');
-      colorInput.style.opacity = `${parseInt(alpha) / 255}`;
-      opacityText.textContent = `opacity: ${alpha}/255`;
       this.dispatchEvent(new CustomEvent('change', {
         detail: {
-          value: `${color}${hexAlpha}`,
+          value: `${size}${unit}`,
         },
       }));
     }
 
-    inputContainer.className = 'color-input-container';
-    colorInput.setAttribute('type', 'color');
-    colorInput.className = 'color-input';
-    colorInput.value = this.getAttribute('data-color') || '#000000';
-    alphaInput.setAttribute('type', 'range');
-    alphaInput.setAttribute('min', '0');
-    alphaInput.setAttribute('max', '255');
-    alphaInput.value = `${this.getAttribute('data-alpha') || 255}`;
+    sizeInput.setAttribute('type', 'number');
+    sizeInput.value = size;
+    unitInput.value = unit;
 
-    colorInput.addEventListener("change", () => {
-      color = colorInput.value;
+    sizeInput.addEventListener("change", () => {
+      size = sizeInput.value;
       update();
     });
-    alphaInput.addEventListener('change', () => {
-      alpha = alphaInput.value;
+    unitInput.addEventListener('change', () => {
+      unit = unitInput.value;
       update();
     });
 
-    inputContainer.appendChild(colorInput);
-    container.appendChild(inputContainer);
-    container.appendChild(opacityInputContainer);
+    container.appendChild(sizeInput);
+    container.appendChild(unitInput);
     update();
+  }
+  
+  dispathChangeEvent() {
+    const hexAlpha = parseInt(this.alphaInput.value).toString(16).padStart(2, '0');
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: {
+        value: `${this.colorInput.value}${hexAlpha}`,
+      },
+    }));
+  }
+
+  connectedCallback() { this.mounted = true; }
+  disconnectedCallback() { this.mounted = false; }
+
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    if (oldValue === newValue) return;
+    if (name === 'value') {
+      this.colorInput.value = newValue.substring(0,7);
+      this.alphaInput.value = `${parseInt(newValue.substring(7, 9), 16)}`;
+      this.colorInput.style.opacity = `${parseInt(this.alphaInput.value) / 255}`;
+      this.opacityText.textContent = `opacity: ${this.alphaInput.value}/255`;
+      if (this.mounted) this.dispathChangeEvent();
+    }
   }
 });

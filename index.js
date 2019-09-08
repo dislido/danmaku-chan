@@ -27,9 +27,6 @@ function createWindow () {
 
   // 加载index.html文件
   mainWnd.loadFile('./dist/index.html');
-  mainWnd.webContents.openDevTools({
-    mode:'detach',
-  });
 
   globalShortcut.register('Alt+A', toggleMainWndFocus);
 }
@@ -43,6 +40,7 @@ ipcMain.on('openSetting', () => {
   mainWnd.setAlwaysOnTop(false);
   if (settingWnd) return settingWnd.moveTop();
   settingWnd = new BrowserWindow({
+    parent: mainWnd,
     webPreferences: {
       nodeIntegration: true,
     },
@@ -52,4 +50,8 @@ ipcMain.on('openSetting', () => {
     settingWnd = null;
     mainWnd.setAlwaysOnTop(true);
   });
+});
+
+ipcMain.on('updateStyleVars', () => {
+  mainWnd.webContents.send('updateStyleVars');
 });

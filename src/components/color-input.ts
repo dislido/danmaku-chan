@@ -1,4 +1,13 @@
 customElements.define('color-input', class extends HTMLElement {
+  static get observedAttributes() {
+    return ['value'];
+  }
+
+  colorInput: HTMLInputElement;
+  alphaInput: HTMLInputElement;
+  opacityText: HTMLElement;
+  mounted = false;
+
   constructor() {
     super();
     const shadowRoot = this.attachShadow({ mode: 'open' });
@@ -22,51 +31,69 @@ customElements.define('color-input', class extends HTMLElement {
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(container);
 
-    let color = this.getAttribute('data-color') || '#000000';
-    let alpha = this.getAttribute('data-alpha') || '255';
-    const colorInput = document.createElement('input');
-    const alphaInput = document.createElement('input');
-    const inputContainer = document.createElement('div');
+    let value = this.getAttribute('value') || '#000000ff';
+    
+    this.colorInput = document.createElement('input');
+    this.colorInput.setAttribute('type', 'color');
+    this.colorInput.className = 'color-input';
+    this.colorInput.value = value.substring(0,7);
+
+    const colorInputContainer = document.createElement('div');
+    colorInputContainer.className = 'color-input-container';
+    colorInputContainer.appendChild(this.colorInput);
+
+    this.alphaInput = document.createElement('input');
+    this.alphaInput.setAttribute('type', 'range');
+    this.alphaInput.setAttribute('min', '0');
+    this.alphaInput.setAttribute('max', '255');
+    this.alphaInput.value = `${parseInt(value.substring(7, 9), 16)}`;
+
+    this.opacityText = document.createElement('section');
+    this.opacityText.textContent = `opacity: ${this.colorInput.value}/255`;
+
     const opacityInputContainer = document.createElement('div');
-    const opacityText = document.createElement('section');
-
-    opacityText.textContent = `opacity: ${alpha}/255`;
     opacityInputContainer.style.display = 'inline-block';
-    opacityInputContainer.appendChild(opacityText);
-    opacityInputContainer.appendChild(alphaInput);
+    opacityInputContainer.appendChild(this.opacityText);
+    opacityInputContainer.appendChild(this.alphaInput);
 
-    const update = () => {
-      const hexAlpha = parseInt(alphaInput.value).toString(16).padStart(2, '0');
-      colorInput.style.opacity = `${parseInt(alpha) / 255}`;
-      opacityText.textContent = `opacity: ${alpha}/255`;
-      this.dispatchEvent(new CustomEvent('change', {
-        detail: {
-          value: `${color}${hexAlpha}`,
-        },
-      }));
-    }
-
-    inputContainer.className = 'color-input-container';
-    colorInput.setAttribute('type', 'color');
-    colorInput.className = 'color-input';
-    colorInput.value = this.getAttribute('data-color') || '#000000';
-    alphaInput.setAttribute('type', 'range');
-    alphaInput.setAttribute('min', '0');
-    alphaInput.setAttribute('max', '255');
-    alphaInput.value = `${this.getAttribute('data-alpha') || 255}`;
-
-    colorInput.addEventListener("change", () => {
-      color = colorInput.value;
-      update();
+    this.colorInput.addEventListener("change", () => {
+      this.dispathChangeEvent();
     });
-    alphaInput.addEventListener('change', () => {
-      alpha = alphaInput.value;
-      update();
+    this.alphaInput.addEventListener('change', () => {
+      this.colorInput.style.opacity = `${parseInt(this.alphaInput.value) / 255}`;
+      this.opacityText.textContent = `opacity: ${this.alphaInput.value}/255`;
+      this.dispathChangeEvent();
     });
-
-    inputContainer.appendChild(colorInput);
-    container.appendChild(inputContainer);
+  
+    container.appendChild(colorInputContainer);
     container.appendChild(opacityInputContainer);
-    update();
+  }
+
+  dispathChangeEvent() {
+    const hexAlpha = parseInt(this.alphaInput.value).toString(16).padStart(2, '0');
+    this.dispatchEvent(new CustomEvent('change', {
+      detail: {
+        value: `${this.colorInput.value}${hexAlpha}`,
+      },
+    }));
+  }
+
+  connectedCallback() {
+    this.mounted = true;
+  }
+
+  disconnectedCallback() {
+    this.mounted = false;
+  }
+
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    if (oldValue === newValue) return;
+    if (name === 'value') {
+      this.colorInput.value = newValue.substring(0,7);
+      this.alphaInput.value = `${parseInt(newValue.substring(7, 9), 16)}`;
+      this.colorInput.style.opacity = `${parseInt(this.alphaInput.value) / 255}`;
+      this.opacityText.textContent = `opacity: ${this.alphaInput.value}/255`;
+      if (this.mounted) this.dispathChangeEvent();
+    }
   }
 });

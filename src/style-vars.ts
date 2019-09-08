@@ -1,4 +1,5 @@
-import ConfigManager from './setting/config-manager';
+import { remote } from 'electron';
+import './setting/config-manager';
 
 const styleEl = document.createElement('style');
 document.head.appendChild(styleEl);
@@ -18,3 +19,10 @@ function objToCss(obj: cssVarObj) {
   });
   return style;
 }
+
+
+export function updateStyleVars() {
+  styleEl.textContent = objToCss(JSON.parse(localStorage.getItem('config') || '{}').render.style);
+}
+
+updateStyleVars();

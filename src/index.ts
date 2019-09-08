@@ -1,8 +1,10 @@
 import { ipcRenderer, remote } from 'electron';
 import ConfigManager from './setting/config-manager';
 import Server from './server';
+import { updateStyleVars } from './style-vars';
 import biliRender from "./render/render-bili";
 import twitchRender from "./render/render-twitch";
+
 
 const listEl = document.getElementById('list')!;
 const htmlEl = document.documentElement;
@@ -13,7 +15,6 @@ htmlEl.addEventListener('keydown', (ev) => {
 }); 
 
 ipcRenderer.on('setWndFocus', (event: Electron.IpcRendererEvent, focus: boolean) => {
-  console.log(focus);
   htmlEl.className = focus ? 'setting' : '';
 })
 
@@ -39,9 +40,11 @@ function render(data: Danmaku[]) {
   listEl.scrollTop = listEl.scrollHeight;
 }
 
-const server = new Server(ConfigManager.config.port);
-server.listen(render);
-
 document.getElementById('setting-icon')!.addEventListener('click', () => {
   ipcRenderer.send('openSetting');
 });
+
+ipcRenderer.on('updateStyleVars', updateStyleVars);
+
+const server = new Server(ConfigManager.config.port);
+server.listen(render);

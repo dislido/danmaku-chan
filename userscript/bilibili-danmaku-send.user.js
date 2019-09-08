@@ -78,10 +78,14 @@
     else if (msg.classList.contains('guard-buy')) parseGuardBuy(msg);
   }
 
-  const chatlist = document.getElementById('chat-history-list');
-  let curr = chatlist.children[0];
+  let chatlist;
+  let curr;
   let lastHandled = null;
   setInterval(() => {
+    if (!chatlist) {
+      chatlist = document.getElementById('chat-history-list');
+      return;
+    }
     if (!curr) {
       curr = chatlist.children[0];
       return;
