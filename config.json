@@ -3,10 +3,10 @@
   "render": {
     "style": {
       "#list": {
-        "color": "#ffffffb4",
+        "color": "#ffffff9d",
         "text-stroke-color": "#ff0080ff",
-        "font-size": "16px",
-        "list-background-color": "#00000000",
+        "list-background-color": "#00404048",
+        "font-size": "20px",
         "text-stroke-width": "0.05em",
         "font-weight": "bold",
         "list-background": "transparent"

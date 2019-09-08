@@ -5,8 +5,9 @@ export default {
       '#list': {
         'color': '#ffffffff',
         'text-stroke-color': '#000000ff',
-        'font-size': '16px',
+        // 'text-shadow-color': '#00000000',
         'list-background-color': '#00000000',
+        'font-size': '16px',
         'text-stroke-width': '0.05em',
         'font-weight': '700',
       },

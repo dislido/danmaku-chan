@@ -10,9 +10,7 @@ const configTypeMap = {
   color: 'color-input',
   size: 'size-input',
 }
-function updateStyleVars() {
-  ipcRenderer.send('updateStyleVars');
-}
+
 function configEl(name: string, type: keyof typeof configTypeMap, attr: any = {}, onChange?: (ev: CustomEvent) => void) {
   const el = document.createElement('div');
   el.textContent = name;
@@ -35,11 +33,19 @@ window.onload = function () {
   const styleCfgH = document.createElement('h2');
   styleCfgH.textContent = '配置';
   body.appendChild(styleCfgH);
-  body.appendChild(configEl('文字颜色', 'color', { value: style["#list"].color }, (ev) => {
-    config.render.style["#list"].color = ev.detail.value;
+  body.appendChild(configEl('文字颜色', 'color', { value: style['#list'].color }, (ev) => {
+    style['#list'].color = ev.detail.value;
   }));
-  body.appendChild(configEl('文字描边颜色', 'color', { value: style["#list"]['text-stroke-color'] }, (ev) => {
-    config.render.style["#list"]['text-stroke-color'] = ev.detail.value;
+  body.appendChild(configEl('文字描边颜色', 'color', { value: style['#list']['text-stroke-color'] }, (ev) => {
+    style['#list']['text-stroke-color'] = ev.detail.value;
   }));
-  body.appendChild(configEl('文字大小', 'size'));
+  body.appendChild(configEl('背景颜色', 'color', { value: style['#list']['list-background-color'] }, (ev) => {
+    style['#list']['list-background-color'] = ev.detail.value;
+  }));
+  // body.appendChild(configEl('文字阴影颜色', 'color', { value: style['#list']['list-background-color'] }, (ev) => {
+  //   config.render.style['#list']['list-background-color'] = ev.detail.value;
+  // }));
+  body.appendChild(configEl('文字大小', 'size', { value: style['#list']['font-size'] }, (ev) => {
+    style['#list']['font-size'] = ev.detail.value;
+  }));
 }

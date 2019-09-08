@@ -1,3 +1,5 @@
+const cssColor = require('css-color-names');
+
 customElements.define('color-input', class extends HTMLElement {
   static get observedAttributes() {
     return ['value'];
@@ -32,6 +34,7 @@ customElements.define('color-input', class extends HTMLElement {
     shadowRoot.appendChild(container);
 
     let value = this.getAttribute('value') || '#000000ff';
+    if (cssColor[value]) value = `${cssColor[value]}ff`;
     
     this.colorInput = document.createElement('input');
     this.colorInput.setAttribute('type', 'color');
@@ -89,6 +92,7 @@ customElements.define('color-input', class extends HTMLElement {
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (oldValue === newValue) return;
     if (name === 'value') {
+      if (cssColor[newValue]) newValue = `${cssColor[newValue]}ff`;
       this.colorInput.value = newValue.substring(0,7);
       this.alphaInput.value = `${parseInt(newValue.substring(7, 9), 16)}`;
       this.colorInput.style.opacity = `${parseInt(this.alphaInput.value) / 255}`;

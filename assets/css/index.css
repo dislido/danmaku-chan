@@ -42,7 +42,7 @@ html.setting header {
 #list {
   height: calc(100% - 34px);
   min-height: 1.5em;
-  background: var(--list-background, transparent);
+  background: var(--list-background-color, transparent);
   color: var(--color, white);
   overflow: hidden;
   text-shadow: var(--color, white) 0 0 0.25em;

@@ -3,8 +3,8 @@ customElements.define('size-input', class extends HTMLElement {
     return ['value'];
   }
   
-  colorInput: HTMLInputElement;
-  alphaInput: HTMLInputElement;
+  sizeInput: HTMLInputElement;
+  unitInput: HTMLSelectElement;
   opacityText: HTMLElement;
   mounted = false;
 
@@ -17,51 +17,40 @@ customElements.define('size-input', class extends HTMLElement {
     shadowRoot.appendChild(style);
     shadowRoot.appendChild(container);
 
-    let size = this.getAttribute('data-size') || '16';
-    let unit = this.getAttribute('data-unit') || 'px';
-    const sizeInput = document.createElement('input');
-    const unitInput = document.createElement('select');
+    let value = this.getAttribute('value') || '16px';
 
-    const unitPx = document.createElement('option');
-    unitPx.textContent = 'px';
-    unitPx.setAttribute('value', 'px');
-    unitInput.appendChild(unitPx);
-    const unitEm = document.createElement('option');
-    unitEm.textContent = 'em';
-    unitEm.setAttribute('value', 'em');
-    unitInput.appendChild(unitEm);
-  
-    const update = () => {
-      this.dispatchEvent(new CustomEvent('change', {
-        detail: {
-          value: `${size}${unit}`,
-        },
-      }));
+    const sizeInput = this.sizeInput = document.createElement('input');
+    const unitInput = this.unitInput = document.createElement('select');
+
+    const createOption = (text: string, value: string = text) => {
+      const el = document.createElement('option');
+      el.textContent = text;
+      el.setAttribute('value', value);
+      return el;
     }
-
+    unitInput.appendChild(createOption('px'));
+    unitInput.appendChild(createOption('em'));
+    unitInput.appendChild(createOption(''));
+  
     sizeInput.setAttribute('type', 'number');
-    sizeInput.value = size;
-    unitInput.value = unit;
+    sizeInput.value = `${parseInt(value)}`;
+    unitInput.value = /[a-z]*$/.exec(value)![0];
 
     sizeInput.addEventListener("change", () => {
-      size = sizeInput.value;
-      update();
+      this.dispathChangeEvent();
     });
     unitInput.addEventListener('change', () => {
-      unit = unitInput.value;
-      update();
+      this.dispathChangeEvent();
     });
 
     container.appendChild(sizeInput);
     container.appendChild(unitInput);
-    update();
   }
   
   dispathChangeEvent() {
-    const hexAlpha = parseInt(this.alphaInput.value).toString(16).padStart(2, '0');
     this.dispatchEvent(new CustomEvent('change', {
       detail: {
-        value: `${this.colorInput.value}${hexAlpha}`,
+        value: `${this.sizeInput.value}${this.unitInput.value}`,
       },
     }));
   }
@@ -72,10 +61,8 @@ customElements.define('size-input', class extends HTMLElement {
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (oldValue === newValue) return;
     if (name === 'value') {
-      this.colorInput.value = newValue.substring(0,7);
-      this.alphaInput.value = `${parseInt(newValue.substring(7, 9), 16)}`;
-      this.colorInput.style.opacity = `${parseInt(this.alphaInput.value) / 255}`;
-      this.opacityText.textContent = `opacity: ${this.alphaInput.value}/255`;
+      this.sizeInput.value = `${parseInt(newValue)}`;
+      this.unitInput.value = /[a-z]*$/.exec(newValue)![0];
       if (this.mounted) this.dispathChangeEvent();
     }
   }
