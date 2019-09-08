@@ -55,7 +55,7 @@ customElements.define('color-input', class extends HTMLElement {
     if (!this.errorValue) this.alphaInput.value = `${parseInt(value.substring(7, 9), 16)}`;
 
     this.opacityText = document.createElement('section');
-    this.opacityText.textContent = `opacity: ${this.colorInput.value}/255`;
+    this.opacityText.textContent = `opacity: ${this.alphaInput.value}/255`;
 
     const opacityInputContainer = document.createElement('div');
     opacityInputContainer.appendChild(this.opacityText);
@@ -76,13 +76,8 @@ customElements.define('color-input', class extends HTMLElement {
     container.appendChild(opacityInputContainer);
   }
 
-  dispathChangeEvent() {
-    const hexAlpha = parseInt(this.alphaInput.value).toString(16).padStart(2, '0');
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: {
-        value: `${this.colorInput.value}${hexAlpha}`,
-      },
-    }));
+  dispathChangeEvent(value = `${this.colorInput.value}${parseInt(this.alphaInput.value).toString(16).padStart(2, '0')}`) {
+    this.dispatchEvent(new CustomEvent('change', { detail: { value } }));
   }
 
   setErrorValue(isErr: boolean) {
@@ -103,15 +98,17 @@ customElements.define('color-input', class extends HTMLElement {
     if (oldValue === newValue) return;
     if (name === 'value') {
       if (cssColor[newValue]) newValue = `${cssColor[newValue]}ff`;
-      if (!/^#[a-f0-9]{8}$/i.test(newValue)) {
-        this.setErrorValue(true);
-        return;
+
+      if (!/^#[a-f0-9]{8}$/i.test(newValue)) this.setErrorValue(true);
+      else {
+        this.setErrorValue(false);
+        this.colorInput.value = newValue.substring(0,7);
+        this.alphaInput.value = `${parseInt(newValue.substring(7, 9), 16)}`;
+        this.colorInput.style.opacity = `${parseInt(this.alphaInput.value) / 255}`;
+        this.opacityText.textContent = `opacity: ${this.alphaInput.value}/255`;
       }
-      this.colorInput.value = newValue.substring(0,7);
-      this.alphaInput.value = `${parseInt(newValue.substring(7, 9), 16)}`;
-      this.colorInput.style.opacity = `${parseInt(this.alphaInput.value) / 255}`;
-      this.opacityText.textContent = `opacity: ${this.alphaInput.value}/255`;
-      if (this.mounted) this.dispathChangeEvent();
+
+      if (this.mounted) this.dispathChangeEvent(newValue);
     }
   }
 });
