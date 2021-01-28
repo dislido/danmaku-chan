@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "css-color-names": "^1.0.1",
-    "electron": "^6.0.6"
+    "electron": "^9.4.0"
   },
   "devDependencies": {}
 }
